@@ -10,7 +10,6 @@ namespace UndertaleEngine.Game1
         [STAThread]
         static void Main()
         {
-            // Disable DPI scaling entirely
             SetProcessDPIAware();
 
             using var game = new Setup();

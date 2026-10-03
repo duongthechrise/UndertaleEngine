@@ -23,13 +23,26 @@ namespace UndertaleEngine
         public static int page = 1;
         public static bool selectingFightopts = false;
         public static bool selectingActopts = false;
-
+        //               stat
         public static String Enemy1Name = "Red";
         public static String Enemy2Name = "Enemy2";
         public static String Enemy3Name = "Enemy3";
         public static int Enemy1HP = 10000;
-        public static bool targetingEnemy1 = false;
+        public static double Damage = 222;
+        public static int EnemyDef = 20;
+        public static int PlayerATK = 10;
+        // ======================================
 
+        //       fight Animation config
+        public static bool targetingEnemy1 = false;
+        public static bool attacking = false;
+        public static bool turnfinish = false;
+        public static bool performingattack = false;
+        public static int direction;
+        public static bool slice = false;
+        public static bool dodge = true;
+        public static bool Miss = false;
+        //========================================
         public static void Update()
         {
 

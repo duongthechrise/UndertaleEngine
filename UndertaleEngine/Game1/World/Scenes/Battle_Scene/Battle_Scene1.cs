@@ -15,15 +15,8 @@ namespace UndertaleEngine.Game1
         private SceneManager _manager;
         public Red_heart _redheart;
         private UISystem uisystem;
-        private Button_Fight _buttonfight;
-        private Button_Act _buttonact;
-        private Button_Item _buttonitem;
-        private Button_Mercy _buttonmercy;
         private Bullet_test _bullet;
         public HP_Bar _hpbar;
-        private DisplayText _LV;
-        private DisplayText _HPstat;
-        private DisplayText _name;
         private DisplayText _timer;
         private DisplayText _timer2;
         DisplayText star;
@@ -37,13 +30,8 @@ namespace UndertaleEngine.Game1
         public BattleSystem battlesystem;
         DialogText dialog;
         KeyboardState _prevKeyboard;
-        private PlayerHP _HP;
-        private int LV = 19;
-        Random random = new Random(); //random.Next()
-
         private SpriteFont _MarsFont;
         SpriteFont determonofont;
-        SoundEffect _switch;
         public void SetManager(SceneManager manager)
         {
             _manager = manager;
@@ -68,7 +56,6 @@ namespace UndertaleEngine.Game1
             Boards["1"].Position = new Vector2(320, 320);
             Boards["1"].SetRectangle(288, 70, 288, 70);
             _boardsystem.AddBoard(Boards["1"]);
-            _switch = content.Load<SoundEffect>("Sounds/snd_menu_switch");
             uisystem = new UISystem();
             uisystem.Load(content, graphicsDevice);
             _pixel = new Texture2D(graphicsDevice, 1, 1);
@@ -299,13 +286,9 @@ namespace UndertaleEngine.Game1
                   SamplerState.PointClamp);
 
             _redheart.Draw(spriteBatch);
-            if (Menu.IsInMenu)
-            {
-                dialog.Draw(spriteBatch);
-                star.Draw(spriteBatch);
-            }
             uisystem._buttonfight.fight.Draw(spriteBatch);
-                //DebugDraw.DrawOBB(spriteBatch, A, Color.White);
+            uisystem._buttonfight.fight.Anim.DrawOut(spriteBatch);
+            //DebugDraw.DrawOBB(spriteBatch, A, Color.White);
             //DebugDraw.DrawOBB(spriteBatch, B, Color.White);
             spriteBatch.End();
         }
@@ -313,15 +296,18 @@ namespace UndertaleEngine.Game1
 
         void DrawInsideBoard(SpriteBatch spriteBatch)
         {
-
+            uisystem._buttonfight.fight.Anim.Draw(spriteBatch);
+            uisystem._buttonfight.fight.Anim.DrawIn(spriteBatch);
+            if (Menu.IsInMenu)
+            {
+                dialog.Draw(spriteBatch);
+                star.Draw(spriteBatch);
+            }
         }
         void DrawBackGround(SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
             spriteBatch.Draw(_pixel, new Rectangle(0, 0, 640, 480), Color.CornflowerBlue);
-            _timer.Draw(spriteBatch);
-            _timer2.Draw(spriteBatch);
             uisystem.Draw(spriteBatch);
-            _bullet.Draw(spriteBatch);
         }
         public void Unload()
         {

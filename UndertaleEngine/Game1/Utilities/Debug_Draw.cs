@@ -4,7 +4,6 @@ using System;
 
 public static class DebugDraw
 {
-    // Pixel trắng 1x1 dùng chung
     private static Texture2D _pixel;
 
     public static void Init(GraphicsDevice graphicsDevice)
@@ -13,9 +12,6 @@ public static class DebugDraw
         _pixel.SetData(new[] { Color.White });
     }
 
-    /// <summary>
-    /// Vẽ 1 đường thẳng từ p1 đến p2.
-    /// </summary>
     public static void DrawLine(SpriteBatch spriteBatch, Vector2 p1, Vector2 p2, Color color)
     {
         Vector2 delta = p2 - p1;
@@ -38,9 +34,6 @@ public static class DebugDraw
         );
     }
 
-    /// <summary>
-    /// Vẽ outline của OBB.
-    /// </summary>
     public static void DrawOBB(SpriteBatch spriteBatch, OBB obb, Color color)
     {
         var c = obb.Corners;

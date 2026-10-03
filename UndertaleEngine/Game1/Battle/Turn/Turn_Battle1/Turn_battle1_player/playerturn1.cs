@@ -16,13 +16,11 @@ namespace UndertaleEngine.Game1
         }
         public void Update(GameTime gameTime)
         {
-            var k = Keyboard.GetState();
-            if(k.IsKeyDown(Keys.C) && !_prevkeyboard.IsKeyDown(Keys.C))
+            if (Menu.turnfinish)
             {
                 IsFinished = true;
-                System.Diagnostics.Debug.WriteLine("bbb");
+                Menu.turnfinish = false;
             }
-            _prevkeyboard = k;
         }
         public class PlayerTurn2 : ITurn_battle1
         {
@@ -33,7 +31,8 @@ namespace UndertaleEngine.Game1
             {
                 this.battle = battle;
                 Menu.IsMenu = true;
-                battle.Boards["1"].StartResize(new BoardRect(288, 70, 288, 70), 0.5f, BattleBoard.Ease.InOutCubic);
+                Menu.IsInMenu = true;
+                battle.Boards["1"].StartResize(new BoardRect(288, 70, 288, 70), 0.25f, BattleBoard.Ease.Linear);
             }
             public void Update(GameTime gameTime)
             {

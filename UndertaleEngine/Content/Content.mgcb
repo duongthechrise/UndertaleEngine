@@ -58,6 +58,12 @@
 /processorParam:Quality=Best
 /build:Sounds/snd_menu_switch.wav
 
+#begin Sounds/snd_slice.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/snd_slice.wav
+
 #begin Sprites/Button/button_act.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -106,6 +112,18 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Button/button_mercy.png
 
+#begin Sprites/Fight/fight_aim.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Fight/fight_aim.png
+
 #begin Sprites/Fight/fight_bg.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -117,6 +135,42 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Fight/fight_bg.png
+
+#begin Sprites/Fight/fight_damage.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Fight/fight_damage.png
+
+#begin Sprites/Fight/fight_knife.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Fight/fight_knife.png
+
+#begin Sprites/Fight/fight_miss.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Fight/fight_miss.png
 
 #begin Sprites/Player/heart.png
 /importer:TextureImporter

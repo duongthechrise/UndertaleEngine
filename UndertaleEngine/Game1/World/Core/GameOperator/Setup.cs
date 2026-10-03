@@ -16,18 +16,15 @@ namespace UndertaleEngine.Game1
         KeyboardState _prevKeyboard;
 
 
-        // Virtual resolution (nội dung gốc 4:3)
         private readonly int _virtualWidth = 640;
         private readonly int _virtualHeight = 480;
 
-        // Cấu hình hiển thị
         private bool _isTogglingFullScreen = false;
         private bool _isFullScreen = false;
         private Point _windowedPosition;
         private Point _windowedSize;
         private DisplayMode _display;
 
-        // Dự phòng kích thước mặc định
         private const int DefaultWindowWidth = 640;
         private const int DefaultWindowHeight = 480;
 
@@ -91,7 +88,6 @@ namespace UndertaleEngine.Game1
                 ? GameSettings.Current.WindowHeight
                 : DefaultWindowHeight;
 
-            // Giới hạn kích thước windowed không vượt quá màn hình
             if (targetWidth >= _display.Width || targetHeight >= _display.Height)
             {
                 targetWidth = DefaultWindowWidth;
@@ -238,7 +234,7 @@ namespace UndertaleEngine.Game1
         // ---------------- DRAW ----------------
         protected override void Draw(GameTime gameTime)
         {
-            // 1) Vẽ scene vào renderTarget 640x480 (như cũ)
+            // 1) Vẽ scene vào renderTarget 640x480
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Color.Black);
 
@@ -272,7 +268,7 @@ namespace UndertaleEngine.Game1
                 offsetY = (backH - drawHeight) * 0.5f;
             }
 
-            // 3) Lấy offset shake (đơn vị pixel 640x480)
+            // 3) Lấy offset shake
             Vector2 shakeOffset = _shake.Offset + _pixelShake.Offset;
 
             // 4) Tạo transform: shake trong không gian 640x480 -> scale -> dịch vào giữa màn hình
@@ -281,7 +277,7 @@ namespace UndertaleEngine.Game1
                 Matrix.CreateScale(scale, scale, 1f) *
                 Matrix.CreateTranslation(offsetX, offsetY, 0f);
 
-            // 5) Vẽ ra backbuffer với transform (KHÔNG viewport hack, KHÔNG shakeTarget)
+            // 5) Vẽ ra backbuffer với transform
             GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin(
@@ -294,7 +290,6 @@ namespace UndertaleEngine.Game1
                 transform
             );
 
-            // vẽ texture 640x480 ở (0,0) trong không gian ảo
             _spriteBatch.Draw(_renderTarget, Vector2.Zero, Color.White);
             _spriteBatch.End();
 

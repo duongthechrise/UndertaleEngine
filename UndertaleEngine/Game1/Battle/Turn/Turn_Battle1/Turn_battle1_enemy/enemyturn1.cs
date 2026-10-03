@@ -25,7 +25,7 @@ namespace UndertaleEngine.Game1
                 case 0:
                     if(timer >= 0f)
                     {
-                        battle.Boards["1"].StartResize(new BoardRect(70, 70, 70, 70), 0.5f, BattleBoard.Ease.InOutCubic);
+                        battle.Boards["1"].StartResize(new BoardRect(70, 70, 70, 70), 0.5f, BattleBoard.Ease.Linear);
                         step1++;
                         return;
                     }
@@ -49,20 +49,13 @@ namespace UndertaleEngine.Game1
                 case 3:
                     if (timer >= 2f)
                     {
-               
-                        step1++;
-                        return;
-                    }
-                    break;
-                case 4:
-                    if (timer >= 5f)
-                    {
+
                         step1++;
                         return;
                     }
                     break;
             }
-            if (timer >= 8f)
+            if (timer >= 3f)
             {
                 IsFinished = true;
                 return;

@@ -9,15 +9,12 @@ namespace UndertaleEngine.Game1
 
         public ColorCore(Color color, float brightness = 1f)
         {
-            // Lấy RGB từ màu gốc
             R = color.R / 255f;
             G = color.G / 255f;
             B = color.B / 255f;
 
-            // Chuyển RGB sang HSV
             RGBtoHSV(R, G, B, out H, out S, out V);
 
-            // Áp dụng độ sáng ngay khi khởi tạo
             V *= brightness;
             ClampHSV();
         }

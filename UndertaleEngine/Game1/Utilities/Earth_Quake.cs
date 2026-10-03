@@ -7,7 +7,7 @@ namespace UndertaleEngine.Game1
     {
         private float timer;
         private float duration;
-        private int strength;   // pixel intensity
+        private int strength;  
 
         private Random rand = new Random();
         public Vector2 Offset { get; private set; }
@@ -29,7 +29,6 @@ namespace UndertaleEngine.Game1
 
             timer -= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // rung theo bước pixel, không mượt, đổi hướng liên tục
             int x = rand.Next(-strength, strength + 1);
             int y = rand.Next(-strength, strength + 1);
 

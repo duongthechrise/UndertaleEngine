@@ -15,10 +15,13 @@ namespace UndertaleEngine.Game1
         DisplayText[] target = new DisplayText[3];
         DisplayText[] star = new DisplayText[3];
         HP_Bar hpbar;
-        Anim_Fight test;
+        public Anim_Fight Anim;
+        Random random = new Random();
+        SoundEffect slice;
         public void Load(ContentManager content, GraphicsDevice graphics)
         {
             Confirm = content.Load<SoundEffect>("Sounds/snd_menu_confirm");
+            slice = content.Load<SoundEffect>("Sounds/snd_slice");
             determono = content.Load<SpriteFont>("Fonts/Determination_Mono");
             target[0] = new DisplayText(determono, $"{Menu.Enemy1Name}", new Vector2(134, 270), Color.White, 2, true);
             target[1] = new DisplayText(determono, $"{Menu.Enemy2Name}", new Vector2(134, 302), Color.White, 2, true);
@@ -27,8 +30,10 @@ namespace UndertaleEngine.Game1
             star[1] = new DisplayText(determono, "*", new Vector2(100, 302), Color.White, 2, true);
             star[2] = new DisplayText(determono, "*", new Vector2(100, 334), Color.White, 2, true);
             hpbar = new HP_Bar(graphics, new Vector2(212, 280), 101, 17, Menu.Enemy1HP, Color.Lime, CustomColor.SolidHPRed);
-            test = new Anim_Fight(new Vector2(320, 320));
-            test.Load(content, graphics);
+            Anim = new Anim_Fight(new Vector2(320, 320), new Vector2(23,256));
+            Anim.Load(content, graphics);
+            //(23, 256)
+            //(603, 256)
         }
         public void Update(GameTime gametime)
         {
@@ -39,22 +44,34 @@ namespace UndertaleEngine.Game1
                 {
                     if (k.IsKeyDown(Keys.Z) && !prevkey.IsKeyDown(Keys.Z))
                     {
+                        //choosing enemy
                         if (Menu.selectingFightopts == false && Menu.targetingEnemy1 != true)
                         {
                             Menu.selectingFightopts = true;
                             Menu.IsInMenu = false;
                             Confirm.Play(0.65f, 0, 0);
                         }
-                        else if(Menu.selectingFightopts && Menu.targetingEnemy1 == false)
+                        //aiming minigame
+                        else if (Menu.selectingFightopts && Menu.targetingEnemy1 == false)
                         {
                             Confirm.Play(0.65f, 0, 0);
+                            Menu.direction = random.Next(1, 3);
                             Menu.targetingEnemy1 = true;
+                            Menu.performingattack = true;
                             Menu.selectingFightopts = false;
+                            Anim.startaiming = true;  
+                        }
+                        //confirming attack
+                        else if(Menu.targetingEnemy1 && Menu.attacking != true)
+                        {
+                            Menu.attacking = true;
+                            Menu.slice = true;
+                            slice.Play();
                         }
                     }
                 }
             }
-            if (Menu.IsInMenu == false)
+            if (Menu.IsInMenu == false && Menu.IsMenu)
             {
                 if (Menu.slot == 1)
                 {
@@ -74,7 +91,7 @@ namespace UndertaleEngine.Game1
                 Menu.FightOptsColumn = 1;
             if (Menu.FightOptsColumn > 3)
                 Menu.FightOptsColumn = 3;
-            test.Update(gametime);
+            Anim.Update(gametime);
         }
         public void Draw(SpriteBatch spritebatch)
         {
@@ -94,7 +111,6 @@ namespace UndertaleEngine.Game1
                     star[2].Draw(spritebatch);
                 }
             }
-            test.Draw(spritebatch);
         }
     }
 }

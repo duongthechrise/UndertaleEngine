@@ -6,8 +6,8 @@ namespace UndertaleEngine.Game1
     {
         public Texture2D Texture;
 
-        public int StartFrame;       // frame bắt đầu của animation
-        public int EndFrame;         // frame kết thúc
+        public int StartFrame;       
+        public int EndFrame;        
         public float FrameTime;
         public bool Loop;
 
@@ -22,7 +22,7 @@ namespace UndertaleEngine.Game1
         public int FrameWidth => Texture.Width / totalSpriteFrames;
         public int FrameHeight => Texture.Height;
 
-        private int totalSpriteFrames; // tổng số frame trên sprite sheet
+        private int totalSpriteFrames; 
 
         public float LoopDuration = -1f;
         private float loopTimer = 0f;

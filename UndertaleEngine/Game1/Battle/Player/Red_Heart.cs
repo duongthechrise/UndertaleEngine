@@ -72,6 +72,14 @@ namespace UndertaleEngine.Game1
             {
                 Menu.IsMenu = !Menu.IsMenu;
             }
+            if (k.IsKeyDown(Keys.C) && !_prevkeyboard.IsKeyDown(Keys.C))
+            {
+                Debug.WriteLine($"turnfinish : {Menu.turnfinish}");
+                Debug.WriteLine($"IsMenu: {Menu.IsMenu}");
+                Debug.WriteLine($"IsInMenu: {Menu.IsInMenu}");
+                Debug.WriteLine($":{Menu.selectingFightopts}");
+                Debug.WriteLine($"targetEnemy1: {Menu.targetingEnemy1}");
+            }
             _prevkeyboard = k;
             if (Menu.IsInMenu == true)
             {

@@ -7,11 +7,9 @@ namespace UndertaleEngine.Game1
 {
     public class Settings
     {
-        // Kích thước cửa sổ windowed (KHÔNG phải fullscreen)
         public int WindowWidth { get; set; } = 640;
         public int WindowHeight { get; set; } = 480;
 
-        // Chỉ lưu trạng thái fullscreen, không lưu kích thước của fullscreen
         public bool FullScreen { get; set; } = false;
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
@@ -40,12 +38,11 @@ namespace UndertaleEngine.Game1
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("⚠ Error loading settings: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("Error loading settings: " + ex.Message);
                 Current = new Settings();
                 SaveSettings(path);
             }
 
-            // Đảm bảo không null
             if (Current == null)
                 Current = new Settings();
         }
@@ -59,7 +56,7 @@ namespace UndertaleEngine.Game1
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("⚠ Error saving settings: " + ex.Message);
+                System.Diagnostics.Debug.WriteLine("Error saving settings: " + ex.Message);
             }
         }
     }
