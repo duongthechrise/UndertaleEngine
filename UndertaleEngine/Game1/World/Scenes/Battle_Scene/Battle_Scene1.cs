@@ -306,7 +306,7 @@ namespace UndertaleEngine.Game1
         }
         void DrawBackGround(SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
-            spriteBatch.Draw(_pixel, new Rectangle(0, 0, 640, 480), Color.CornflowerBlue);
+            spriteBatch.Draw(_pixel, new Rectangle(0, 0, 640, 480), Color.Black);
             uisystem.Draw(spriteBatch);
         }
         public void Unload()

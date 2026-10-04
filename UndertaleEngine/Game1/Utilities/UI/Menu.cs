@@ -28,9 +28,9 @@ namespace UndertaleEngine
         public static String Enemy2Name = "Enemy2";
         public static String Enemy3Name = "Enemy3";
         public static int Enemy1HP = 10000;
-        public static double Damage = 222;
+        public static double Damage;
         public static int EnemyDef = 20;
-        public static int PlayerATK = 10;
+        public static int PlayerATK = 30;
         // ======================================
 
         //       fight Animation config
@@ -40,8 +40,10 @@ namespace UndertaleEngine
         public static bool performingattack = false;
         public static int direction;
         public static bool slice = false;
-        public static bool dodge = true;
+        public static bool dodge = false;
         public static bool Miss = false;
+        public static bool Hit = false;
+        public static bool DealingDamage = false;
         //========================================
         public static void Update()
         {

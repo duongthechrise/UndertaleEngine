@@ -40,6 +40,12 @@
 /processorParam:DebugMode=Auto
 /build:Shaders/MaskEffect.fx
 
+#begin Sounds/snd_damage.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/snd_damage.wav
+
 #begin Sounds/snd_hurt.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

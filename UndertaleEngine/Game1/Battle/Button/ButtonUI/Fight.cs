@@ -42,7 +42,8 @@ namespace UndertaleEngine.Game1
             {
                 if (Menu.slot == 1)
                 {
-                    if (k.IsKeyDown(Keys.Z) && !prevkey.IsKeyDown(Keys.Z))
+                    if (k.IsKeyDown(Keys.Z) && !prevkey.IsKeyDown(Keys.Z) ||
+                        k.IsKeyDown(Keys.Enter) && !prevkey.IsKeyDown(Keys.Enter))
                     {
                         //choosing enemy
                         if (Menu.selectingFightopts == false && Menu.targetingEnemy1 != true)
@@ -66,7 +67,7 @@ namespace UndertaleEngine.Game1
                         {
                             Menu.attacking = true;
                             Menu.slice = true;
-                            slice.Play();
+                            slice.Play(0.65f, 0, 0);
                         }
                     }
                 }
@@ -77,7 +78,9 @@ namespace UndertaleEngine.Game1
                 {
                     if (Menu.targetingEnemy1 != true)
                     {
-                        if (k.IsKeyDown(Keys.X) && !prevkey.IsKeyDown(Keys.X))
+                        if (k.IsKeyDown(Keys.X) && !prevkey.IsKeyDown(Keys.X) ||
+                            k.IsKeyDown(Keys.LeftShift) && !prevkey.IsKeyDown(Keys.LeftShift) ||
+                            k.IsKeyDown(Keys.RightShift) && !prevkey.IsKeyDown(Keys.RightShift))
                         {
                             Menu.selectingFightopts = false;
                             Menu.IsInMenu = true;

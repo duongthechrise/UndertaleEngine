@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,12 +18,12 @@ namespace UndertaleEngine.Game1
         float TotalBGAnimationT = 0f;
         float TotalAimingT = 0f;
         float TotalSlashingT = 0f;
-        float MissAnimationT_Stage1 = 0f;
-        float MissAnimationT_Wait = 0f;
-        float MissAnimationT_Stage2 = 0f;
+        float IndicatorAnimationT_Stage1 = 0f;
+        float IndicatorAnimationT_Wait = 0f;
+        float IndicatorAnimationT_Stage2 = 0f;
         float BGAlpha = 1f;
-        float MissAlphaT_Stage1 = 0f;
-        float MissAlphaT_Stage2 = 0f;
+        float IndicatorAlphaT_Stage1 = 0f;
+        float IndicatorAlphaT_Stage2 = 0f;
 
         bool closingBackground = false;
         public bool startaiming = false;
@@ -30,7 +31,7 @@ namespace UndertaleEngine.Game1
         //dealing
         KeyboardState prevkey;
         Vector2 BGscale = new Vector2(1f, 1f);
-        float MissAlpha = 0f;
+        float IndicatorAlpha = 0f;
         SpriteAnimation aiming;
         SpriteAnimation dealing;
         SpriteAnimation CurrentAnimation;
@@ -39,13 +40,16 @@ namespace UndertaleEngine.Game1
         Texture2D miss;
         Vector2 missposition;
         SpriteAnimation knifeslice;
-        String Damage = Menu.Damage.ToString();
+        String Damage;
         Texture2D DamageNumber;
         SpriteAnimation[] DamageFont = new SpriteAnimation[10];
         Vector2 DamagePosition;
         Vector2 ShiftedPosition;
         int Count;
         float percentage;
+        SoundEffect damage;
+        float DamageSoundT = 0f;
+        HP_Bar hpbar;
         public Anim_Fight(Vector2 BGPosition, Vector2 AimPosition)
         {
             this.BGPosition = BGPosition;
@@ -53,8 +57,6 @@ namespace UndertaleEngine.Game1
             knifeposition = new Vector2(300, 70);
             missposition = new Vector2(320, 60);
             DamagePosition = new Vector2(305, 160);
-            //(320,230)
-            //(320,160)
         }
         public void Load(ContentManager content, GraphicsDevice graphics)
         {
@@ -67,6 +69,7 @@ namespace UndertaleEngine.Game1
             dealing = new SpriteAnimation(fightaim, 2, 0, 1, 0.125f, loop: true);
             CurrentAnimation = aiming;
             DamageNumber = content.Load<Texture2D>("Sprites/Fight/fight_damage");
+            damage = content.Load<SoundEffect>("Sounds/snd_damage");
             DamageFont[1] = new SpriteAnimation(DamageNumber, 10, 0, 0, 0f, loop: false);
             DamageFont[2] = new SpriteAnimation(DamageNumber, 10, 1, 1, 0f, loop: false);
             DamageFont[3] = new SpriteAnimation(DamageNumber, 10, 2, 2, 0f, loop: false);
@@ -77,6 +80,8 @@ namespace UndertaleEngine.Game1
             DamageFont[8] = new SpriteAnimation(DamageNumber, 10, 7, 7, 0f, loop: false);
             DamageFont[9] = new SpriteAnimation(DamageNumber, 10, 8, 8, 0f, loop: false);
             DamageFont[0] = new SpriteAnimation(DamageNumber, 10, 9, 9, 0f, loop: false);
+            hpbar = new HP_Bar(graphics, new Vector2(224, 50), 191, 13, 1050, Color.Lime, CustomColor.DarkGray, animation: true);
+            hpbar.LoadContent(content);
         }
         public void Update(GameTime gametime)
         {
@@ -85,28 +90,10 @@ namespace UndertaleEngine.Game1
                 Damage.Play();
                 Damage.Update(gametime);
             }
+            Damage = Menu.Damage.ToString();
             Count = Damage.Length;
 
             var k = Keyboard.GetState();
-            if (k.IsKeyDown(Keys.Q) && !prevkey.IsKeyDown(Keys.Q))
-            {
-                Debug.WriteLine($"bgAnimationT: {bgAnimationT} " +
-                    $"TotalBGAnimationT:{TotalBGAnimationT} " +
-                    $"TotalAimingT:{TotalAimingT} " +
-                    $"TotalSlashingT:{TotalSlashingT} " +
-                    $"MissAnimationT_Stage1:{MissAnimationT_Stage1} " +
-                    $"MissAnimationT_Wait:{MissAnimationT_Wait} " +
-                    $"MissAnimationT_Stage2:{MissAnimationT_Stage2} " +
-                    $"MissAlphaT_Stage1:{MissAlphaT_Stage1} " +
-                    $"MissAlphaT_Stage2:{MissAlphaT_Stage2} " +
-                    $"BGAlpha:{BGAlpha} " +
-                    $"closingBackground:{closingBackground} " +
-                    $"startaiming:{startaiming} " +
-                    $"MissAlpha:{MissAlpha} " +
-                    $"targetingEnemy1:{Menu.targetingEnemy1} " +
-                    $"attacking:{Menu.attacking} " +
-                    $"performingattack:{Menu.performingattack} ");
-            }
             CurrentAnimation.Play();
             CurrentAnimation.Update(gametime); ;
             if (Menu.targetingEnemy1)
@@ -122,14 +109,17 @@ namespace UndertaleEngine.Game1
                         TotalBGAnimationT += dt2 / 1.5f;
                     if (Menu.attacking && Menu.slice)
                         percentage = 2 * (0.5f - Math.Abs(TotalBGAnimationT - 0.5f));
-                    Menu.Damage = percentage * (Math.Pow(Menu.PlayerATK, 2) / (Menu.PlayerATK + Menu.EnemyDef));
+                    Menu.Damage = Math.Round(percentage * (Math.Pow(Menu.PlayerATK, 2) / (Menu.PlayerATK + Menu.EnemyDef)), MidpointRounding.AwayFromZero);
 
                     //attacking, begin animation
                     if (Menu.attacking)
                     {
                         TotalAimingT += dt2 / 1.5f;
                         if (TotalSlashingT <= 1f)
+                        {
                             TotalSlashingT += dt2 / 0.75f;
+                            DamageSoundT += dt2 / 0.75f;
+                        }
                         knifeslice.Play();
                         knifeslice.Update(gametime);
                     }
@@ -150,45 +140,65 @@ namespace UndertaleEngine.Game1
                         Menu.slice = false;
                         if (Menu.dodge)
                             Menu.Miss = true;
+                        else Menu.Hit = true;
                         knifeslice.Pause();
                         knifeslice.Reset();
                     }
                     //begin miss animation, stage 1: move up and change alpha
-                    if (Menu.Miss && MissAnimationT_Wait == 0f)
+                    if (Menu.Miss && IndicatorAnimationT_Wait == 0f)
                     {
-                        MissAnimationT_Stage1 += dt2 / 0.25f;
-                        MissAlphaT_Stage1 += dt2 / 0.25f;
-                        float Ease = MissAnimationT_Stage1 * (2f - MissAnimationT_Stage1);
-                        if (MissAnimationT_Stage1 <= 1f)
+                        IndicatorAnimationT_Stage1 += dt2 / 0.25f;
+                        IndicatorAlphaT_Stage1 += dt2 / 0.25f;
+                        float Ease = IndicatorAnimationT_Stage1 * (2f - IndicatorAnimationT_Stage1);
+                        if (IndicatorAnimationT_Stage1 <= 1f)
                         {
                             missposition = Vector2.Lerp(new Vector2(320, 160), new Vector2(320, 120), Ease);
-                            MissAlpha = MathHelper.Lerp(0f, 1f, MissAlphaT_Stage1);
+                            IndicatorAlpha = MathHelper.Lerp(0f, 1f, IndicatorAlphaT_Stage1);
+                        }
+                    }
+                    else if (Menu.Hit && IndicatorAnimationT_Wait == 0f)
+                    {
+                        IndicatorAnimationT_Stage1 += dt2 / 0.25f;
+                        IndicatorAlphaT_Stage1 += dt2 / 0.25f;
+                        float Ease = IndicatorAnimationT_Stage1 * (2f - IndicatorAnimationT_Stage1);
+                        if (IndicatorAnimationT_Stage1 <= 1f)
+                        {
+                            DamagePosition = Vector2.Lerp(new Vector2(DamagePosition.X, 160), new Vector2(DamagePosition.X, 120), Ease);
+                            IndicatorAlpha = MathHelper.Lerp(0f, 1f, IndicatorAlphaT_Stage1);
                         }
                     }
                     //miss animation delay, wait for a moment before stage 2
-                    if (MissAnimationT_Stage1 >= 1f && MissAnimationT_Stage2 == 0f)
+                    if (IndicatorAnimationT_Stage1 >= 1f && IndicatorAnimationT_Stage2 == 0f)
                     {
-                        MissAnimationT_Wait += dt2 / 0.25f;
+                        IndicatorAnimationT_Wait += dt2 / 0.25f;
                     }
                     //delay finished, begin stage 2: move up and change alpha again
-                    if (MissAnimationT_Wait >= 1f && MissAnimationT_Stage2 <= 1f)
+                    if (IndicatorAnimationT_Wait >= 1f && IndicatorAnimationT_Stage2 <= 1f && Menu.Miss)
                     {
-                        MissAnimationT_Stage2 += dt2 / 0.25f;
-                        MissAlphaT_Stage2 += dt2 / 0.25f;
-                        missposition = Vector2.Lerp(new Vector2(320, 120), new Vector2(320, 60), MissAnimationT_Stage2 * MissAnimationT_Stage2);
-                        MissAlpha = MathHelper.Lerp(1f, 0f, MissAlphaT_Stage2);
+                        IndicatorAnimationT_Stage2 += dt2 / 0.25f;
+                        IndicatorAlphaT_Stage2 += dt2 / 0.25f;
+                        missposition = Vector2.Lerp(new Vector2(320, 120), new Vector2(320, 60), IndicatorAnimationT_Stage2 * IndicatorAnimationT_Stage2);
+                        IndicatorAlpha = MathHelper.Lerp(1f, 0f, IndicatorAlphaT_Stage2);
+                    }
+                    else if (IndicatorAnimationT_Wait >= 1f && IndicatorAnimationT_Stage2 <= 1f && Menu.Hit)
+                    {
+                        IndicatorAnimationT_Stage2 += dt2 / 0.25f;
+                        IndicatorAlphaT_Stage2 += dt2 / 0.25f;
+                        DamagePosition = Vector2.Lerp(new Vector2(DamagePosition.X, 120), new Vector2(DamagePosition.X, 60), IndicatorAnimationT_Stage2 * IndicatorAnimationT_Stage2);
+                        IndicatorAlpha = MathHelper.Lerp(1f, 0f, IndicatorAlphaT_Stage2);
                     }
                     //finishing miss animation, reset variables
-                    if (MissAnimationT_Stage2 >= 1f)
+                    if (IndicatorAnimationT_Stage2 >= 1f)
                     {
                         Menu.Miss = false;
-                        MissAnimationT_Stage1 = 0f;
-                        MissAnimationT_Stage2 = 0f;
-                        MissAnimationT_Wait = 0f;
-                        MissAlphaT_Stage1 = 0f;
-                        MissAlphaT_Stage2 = 0f;
+                        Menu.Hit = false;
+                        IndicatorAnimationT_Stage1 = 0f;
+                        IndicatorAnimationT_Stage2 = 0f;
+                        IndicatorAnimationT_Wait = 0f;
+                        IndicatorAlphaT_Stage1 = 0f;
+                        IndicatorAlphaT_Stage2 = 0f;
                         TotalSlashingT = 0f;
-                        MissAlpha = 1f;
+                        IndicatorAlpha = 1f;
                     }
 
                     if (Menu.direction == 1)
@@ -224,8 +234,25 @@ namespace UndertaleEngine.Game1
                 BGscale = new Vector2(1f, 1f);
                 BGAlpha = 1f;
             }
+            if (DamageSoundT >= 1f)
+            {
+                Menu.DealingDamage = true;
+                DamageSoundT = 0f;
+            }
+            if(Menu.DealingDamage)
+            {
+                damage.Play(0.65f, 0, 0);
+                hpbar.Damage((float)Menu.Damage);
+                Menu.DealingDamage = false;
+            }
+            hpbar.Update(gametime);
+            if (k.IsKeyDown(Keys.Space) && !prevkey.IsKeyDown(Keys.Space))
+                hpbar.Damage(500);
+            if (k.IsKeyDown(Keys.B))
+                hpbar.Heal(1000);
+            Debug.WriteLine($"realHP: {hpbar._realHP}, maxHP {hpbar.MaxHP}, t: {hpbar.t}");
+
             prevkey = k;
-            Debug.WriteLine(percentage);
         }
         public void Draw(SpriteBatch spritebatch)
         {
@@ -243,29 +270,55 @@ namespace UndertaleEngine.Game1
         {
             if (Menu.slice)
                 spritebatch.Draw(knifeslice.Texture, knifeposition, knifeslice.GetSourceRect(), Color.White);
-            if (MissAnimationT_Stage1 > 0f)
-                spritebatch.Draw(miss, missposition, null, Color.White * MissAlpha, 0f, new Vector2(miss.Width / 2, miss.Height / 2), 1f, SpriteEffects.None, 0f);
-            //spritebatch.Draw(test.Texture, testposition, test.GetSourceRect(), Color.White);
-            for (int i = 0; i < Count; i++)
+            if (IndicatorAnimationT_Stage1 > 0f && Menu.Miss)
             {
-                char c = Damage[i];
-                DamagePosition = new Vector2(305 - 16 * (Count - 1), 160);
-                ShiftedPosition = new Vector2(DamagePosition.X + i * 32, DamagePosition.Y);
-                switch (c)
-                {
-                    case '0':
-                        spritebatch.Draw(DamageFont[0].Texture, ShiftedPosition, DamageFont[0].GetSourceRect(), Color.White);
-                        break;
-                    case '1':
-                        spritebatch.Draw(DamageFont[1].Texture, ShiftedPosition, DamageFont[1].GetSourceRect(), Color.White);
-                        break;
-                    case '2':
-                        spritebatch.Draw(DamageFont[2].Texture, ShiftedPosition, DamageFont[2].GetSourceRect(), Color.White);
-                        break;
-                }
-
+                spritebatch.Draw(miss, missposition, null, Color.White * IndicatorAlpha, 0f, new Vector2(miss.Width / 2, miss.Height / 2), 1f, SpriteEffects.None, 0f);
             }
-            spritebatch.Draw(DamageFont[1].Texture, new Vector2(305, 120), DamageFont[1].GetSourceRect(), Color.White);
+            //spritebatch.Draw(test.Texture, testposition, test.GetSourceRect(), Color.White);
+            if (IndicatorAnimationT_Stage1 > 0f && Menu.Hit)
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    char c = Damage[i];
+                    DamagePosition = new Vector2(305 - 16 * (Count - 1), DamagePosition.Y);
+                    ShiftedPosition = new Vector2(DamagePosition.X + i * 32, DamagePosition.Y);
+                    hpbar.alpha = IndicatorAlpha;
+                    hpbar.Draw(spritebatch);
+                    switch (c)
+                    {
+                        case '0':
+                            spritebatch.Draw(DamageFont[0].Texture, ShiftedPosition, DamageFont[0].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '1':
+                            spritebatch.Draw(DamageFont[1].Texture, ShiftedPosition, DamageFont[1].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '2':
+                            spritebatch.Draw(DamageFont[2].Texture, ShiftedPosition, DamageFont[2].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '3':
+                            spritebatch.Draw(DamageFont[3].Texture, ShiftedPosition, DamageFont[3].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '4':
+                            spritebatch.Draw(DamageFont[4].Texture, ShiftedPosition, DamageFont[4].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '5':
+                            spritebatch.Draw(DamageFont[5].Texture, ShiftedPosition, DamageFont[5].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '6':
+                            spritebatch.Draw(DamageFont[6].Texture, ShiftedPosition, DamageFont[6].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '7':
+                            spritebatch.Draw(DamageFont[7].Texture, ShiftedPosition, DamageFont[7].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '8':
+                            spritebatch.Draw(DamageFont[8].Texture, ShiftedPosition, DamageFont[8].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                        case '9':
+                            spritebatch.Draw(DamageFont[9].Texture, ShiftedPosition, DamageFont[9].GetSourceRect(), Color.White * IndicatorAlpha);
+                            break;
+                    }
+                }
+            }
         }
     }
 }
