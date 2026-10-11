@@ -18,6 +18,7 @@ namespace UndertaleEngine.Game1
         public Anim_Fight Anim;
         Random random = new Random();
         SoundEffect slice;
+        DisplayText test;
         public void Load(ContentManager content, GraphicsDevice graphics)
         {
             Confirm = content.Load<SoundEffect>("Sounds/snd_menu_confirm");

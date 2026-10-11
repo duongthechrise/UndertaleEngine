@@ -27,6 +27,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/Determination_Mono.spritefont
 
+#begin Fonts/Determination_Sans.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Determination_Sans.spritefont
+
 #begin Fonts/Mars_Needs_Cunnilingus.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -117,6 +124,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/Button/button_mercy.png
+
+#begin Sprites/Enemy/enemy.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/Enemy/enemy.png
 
 #begin Sprites/Fight/fight_aim.png
 /importer:TextureImporter

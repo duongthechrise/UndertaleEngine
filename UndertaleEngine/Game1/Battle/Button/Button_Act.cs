@@ -14,7 +14,7 @@ namespace UndertaleEngine.Game1
         public SpriteAnimation IsHover;
         public SpriteAnimation CurrentAnimation;
         public OBB Hitbox;
-        Act act;
+        public Act act;
         public Button_Act()
         {
             Position = new Vector2(0, 0);
@@ -35,7 +35,7 @@ namespace UndertaleEngine.Game1
             CurrentAnimation.Play();
             CurrentAnimation.Update(gameTime);
             act.Update(gameTime);
-            if (Menu.slot == 2 && Menu.IsMenu)
+            if (Menu.slot == 2 && Menu.IsMenu && !Menu.confirmAction)
             {
                 CurrentAnimation = IsHover;
             }

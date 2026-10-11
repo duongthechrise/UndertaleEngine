@@ -17,8 +17,7 @@ namespace UndertaleEngine.Game1
         public SpriteAnimation IsIdle;
         public SpriteAnimation CurrentAnimation;
         private Texture2D _pixel;
-        KeyboardState _prevkeyboard;
-        KeyboardState _prevkeyboard2;
+        KeyboardState prevkey;
         KeyboardState prevkey3;
 
 
@@ -68,34 +67,102 @@ namespace UndertaleEngine.Game1
             }
             CurrentAnimation.Update(gameTime);
             var k = Keyboard.GetState();
-            if (k.IsKeyDown(Keys.R) && !_prevkeyboard.IsKeyDown(Keys.R))
+            if (k.IsKeyDown(Keys.Left) && !prevkey.IsKeyDown(Keys.Left))
             {
-                Menu.IsMenu = !Menu.IsMenu;
-            }
-            if (k.IsKeyDown(Keys.C) && !_prevkeyboard.IsKeyDown(Keys.C))
-            {
-                Debug.WriteLine($"turnfinish : {Menu.turnfinish}");
-                Debug.WriteLine($"IsMenu: {Menu.IsMenu}");
-                Debug.WriteLine($"IsInMenu: {Menu.IsInMenu}");
-                Debug.WriteLine($":{Menu.selectingFightopts}");
-                Debug.WriteLine($"targetEnemy1: {Menu.targetingEnemy1}");
-            }
-            _prevkeyboard = k;
-            if (Menu.IsInMenu == true)
-            {
-                var k2 = Keyboard.GetState();
-                if (k2.IsKeyDown(Keys.Left) && !_prevkeyboard2.IsKeyDown(Keys.Left))
+                if(Menu.IsInMenu)
                 {
                     Menu.slot -= 1;
                     Switch.Play(0.65f, 0, 0);
                 }
-                if (k2.IsKeyDown(Keys.Right) && !_prevkeyboard2.IsKeyDown(Keys.Right))
+                else if(Menu.selectingActopts && Menu.actingonEnemy1 && !Menu.confirmAction)
+                {
+                    if (Menu.ActOptsRow == 2)
+                    {
+                        Menu.ActOptsRow -= 1;
+                        Switch.Play(0.65f, 0, 0);
+                    }
+                }
+            }
+            if(k.IsKeyDown(Keys.Right) && !prevkey.IsKeyDown(Keys.Right))
+            {
+                if(Menu.IsInMenu)
                 {
                     Menu.slot += 1;
                     Switch.Play(0.65f, 0, 0);
                 }
-                    _prevkeyboard2 = k2;
-
+                else if(Menu.selectingActopts && Menu.actingonEnemy1 && !Menu.confirmAction)
+                {
+                    if (Menu.ActSlots == 2 && Menu.ActOptsRow == 1 ||
+                        Menu.ActSlots == 4 && Menu.ActOptsRow == 1 ||
+                        Menu.ActSlots == 3 && Menu.ActOptsColumn == 1 && Menu.ActOptsRow == 1)
+                    {
+                        Menu.ActOptsRow += 1;
+                        Switch.Play(0.65f, 0, 0);
+                    }
+                }
+            }
+            if(k.IsKeyDown(Keys.Up) && !prevkey.IsKeyDown(Keys.Up))
+            {
+                if (Menu.selectingFightopts)
+                {
+                    if (Menu.FightOptsColumn > 1)
+                    {
+                        Menu.FightOptsColumn -= 1;
+                        Switch.Play(0.65f, 0, 0);
+                    }
+                }
+                else if (Menu.selectingActopts && Menu.actingonEnemy1 && !Menu.confirmAction)
+                {
+                    {
+                        if (Menu.ActOptsColumn == 2)
+                        {
+                            Menu.ActOptsColumn -= 1;
+                            Switch.Play(0.65f, 0, 0);
+                        }
+                    }
+                }
+                else if(!Menu.selectingActopts && !Menu.actingonEnemy1)
+                {
+                    if(Menu.ActEnemyColumn > 1)
+                    {
+                        Menu.ActEnemySlots -= 1;
+                        Switch.Play(0.65f, 0, 0);
+                    }
+                }
+            }
+            if(k.IsKeyDown(Keys.Down) && !prevkey.IsKeyDown(Keys.Down))
+            {
+                if (Menu.selectingFightopts)
+                {
+                    if (Menu.FightOptsColumn != 3 && Menu.FightSlots == 3 ||
+                        Menu.FightOptsColumn == 1 && Menu.FightSlots == 2)
+                    {
+                        Menu.FightOptsColumn += 1;
+                        Switch.Play(0.65f, 0, 0);
+                    }
+                }
+                else if (!Menu.selectingActopts && !Menu.actingonEnemy1)
+                {
+                    if (Menu.ActEnemyColumn != 3 && Menu.ActEnemySlots == 3 ||
+                       Menu.ActEnemyColumn == 1 && Menu.ActEnemySlots == 2)
+                    {
+                        Menu.ActEnemyColumn += 1;
+                    }
+                }
+                else if (Menu.selectingActopts && Menu.actingonEnemy1 && !Menu.confirmAction)
+                {
+                    if (Menu.ActOptsColumn == 1 && Menu.ActSlots == 4 ||
+                        Menu.ActSlots == 3 && Menu.ActOptsColumn == 1 && Menu.ActOptsRow == 1)
+                    {
+                        Menu.ActOptsColumn += 1;
+                        Switch.Play(0.65f, 0, 0);
+                    }
+                }
+                
+            }
+            prevkey = k;
+            if (Menu.IsInMenu == true)
+            {
                 if (Menu.slot <= 0)
                     Menu.slot = 4;
                 if (Menu.slot >= 5)
@@ -110,84 +177,38 @@ namespace UndertaleEngine.Game1
                 if (Menu.slot == 4)
                     Position = new Vector2(516, 454);
             }
-            if(Menu.selectingFightopts == true)
+            if (Menu.selectingActopts && Menu.actingonEnemy1)
             {
-                var k4 = Keyboard.GetState();
-                if(k4.IsKeyDown(Keys.Up) && !prevkey3.IsKeyDown(Keys.Up))
+                if (Menu.ActOptsRow == 1 && Menu.ActOptsColumn == 1 && Menu.ActSlots >= 1)
                 {
-                    if(Menu.FightOptsColumn > 1)
-                    {
-                        Menu.FightOptsColumn -= 1;
-                        Switch.Play(0.65f, 0, 0);
-                    }
-                }
-                if(k4.IsKeyDown(Keys.Down) && !prevkey3.IsKeyDown(Keys.Down))
-                {
-                    if(Menu.FightOptsColumn != 3 && Menu.FightSlots == 3 || 
-                       Menu.FightOptsColumn == 1 && Menu.FightSlots == 2)
-                    {
-                        Menu.FightOptsColumn += 1;
-                        Switch.Play(0.65f, 0, 0);
-                    }
-                }
-                prevkey3 = k4;
-            }
-            if (Menu.selectingActopts == true)
-            {
-                var k3 = Keyboard.GetState();
-                if (k3.IsKeyDown(Keys.Up) && !prevkey3.IsKeyDown(Keys.Up))
-                {
-                    if (Menu.ActOptsColumn == 2)
-                    {
-                        Menu.ActOptsColumn -= 1;
-                        Switch.Play(0.65f, 0, 0);
-                    }
-                }
-                if (k3.IsKeyDown(Keys.Down) && !prevkey3.IsKeyDown(Keys.Down))
-                {
-                    if (Menu.ActOptsRow == 1 && Menu.ActSlots == 4 || 
-                        Menu.ActSlots == 3 && Menu.ActOptsColumn == 1 && Menu.ActOptsRow == 1)
-                    {
-                        Menu.ActOptsColumn += 1;
-                        Switch.Play(0.65f, 0, 0);
-                    }
-                }
-                if (k3.IsKeyDown(Keys.Left) && !prevkey3.IsKeyDown(Keys.Left))
-                {
-                    if (Menu.ActOptsRow == 2)
-                    {
-                        Menu.ActOptsRow -= 1;
-                        Switch.Play(0.65f, 0, 0);
-                    }
-                }
-                if (k3.IsKeyDown(Keys.Right) && !prevkey3.IsKeyDown(Keys.Right))
-                {
-                    if (Menu.ActSlots == 2 && Menu.ActOptsRow == 1 ||
-                        Menu.ActSlots == 4 && Menu.ActOptsRow == 1 ||
-                        Menu.ActSlots == 3 && Menu.ActOptsColumn == 1 && Menu.ActOptsRow == 1)
-                    {
-                        Menu.ActOptsRow += 1;
-                        Switch.Play(0.65f, 0, 0);
-                    }
-                }
-                //if(k3.IsKeyDown(Keys.Q) && !prevkey3.IsKeyDown(Keys.Q))
-                //{
-                //    Debug.WriteLine(Menu.ActOptsRow);
-                //    Debug.WriteLine(Menu.ActOptsColumn);
-                //    Debug.WriteLine(Menu.ActSlots);
-                //}
-                prevkey3 = k3;
-            }
-            if (Menu.selectingActopts)
-            {
-                if(Menu.ActOptsRow == 1 && Menu.ActOptsColumn == 1 && Menu.ActSlots >= 1)
                     Position = new Vector2(72, 286);
+                    Menu.PlayerActSlot = 1;
+                }
                 if (Menu.ActOptsRow == 2 && Menu.ActOptsColumn == 1 && Menu.ActSlots >= 2)
+                {
                     Position = new Vector2(328, 286);
+                    Menu.PlayerActSlot = 2;
+                }
                 if (Menu.ActOptsRow == 1 && Menu.ActOptsColumn == 2 && Menu.ActSlots >= 3)
+                {
                     Position = new Vector2(72, 318);
+                    Menu.PlayerActSlot = 3;
+                }
                 if (Menu.ActOptsRow == 2 && Menu.ActOptsColumn == 2 && Menu.ActSlots == 4)
+                {
                     Position = new Vector2(328, 318);
+                    Menu.PlayerActSlot = 4;
+                }
+
+            }
+            if(Menu.selectingActopts && !Menu.actingonEnemy1)
+            {
+                if (Menu.ActEnemyColumn == 1)
+                    Position = new Vector2(72, 286);
+                if (Menu.ActEnemyColumn == 2)
+                    Position = new Vector2(72, 318);
+                if (Menu.ActEnemyColumn == 3)
+                    Position = new Vector2(72, 350);
             }
             if(Menu.selectingFightopts)
             {
@@ -199,6 +220,10 @@ namespace UndertaleEngine.Game1
                     Position = new Vector2(72, 350);
             }
             if(Menu.targetingEnemy1)
+            {
+                Position = new Vector2(-500, -500);
+            }
+            if(Menu.confirmAction)
             {
                 Position = new Vector2(-500, -500);
             }

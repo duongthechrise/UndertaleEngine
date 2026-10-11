@@ -9,10 +9,22 @@ namespace UndertaleEngine.Game1
     {
         public DisplayText(SpriteFont font, string text, Vector2 position, Color color, float scale = 1f, bool shadow = false) : base(font, text, position, color, scale, shadow)
         {
+            for (int i = 0; i < _text.Length; i++)
+            {
+                if (_text[i] == '~')
+                {
+                    if (_text[i + 1] == 'R')
+                        color = Color.Red;
+                }
+                i += 2;
+            }
         }
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime gametime)
         {
-
+        }
+        public void FixedUpdate(string text)
+        {
+            text = _text;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {

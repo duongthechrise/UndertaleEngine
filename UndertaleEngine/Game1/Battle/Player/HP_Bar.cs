@@ -29,8 +29,9 @@ namespace UndertaleEngine.Game1
         public float t = 0;
         bool startanimation = false;
         public float alpha = 1f;
+        bool outline;
 
-        public HP_Bar(GraphicsDevice device, Vector2 position, int width, int height, float maxHP, Color frontcolor, Color backcolor, bool animation = false)
+        public HP_Bar(GraphicsDevice device, Vector2 position, int width, int height, float maxHP, Color frontcolor, Color backcolor, bool animation = false, bool outline = false)
         {
             _pixel = new Texture2D(device, 1, 1);
             _pixel.SetData(new[] { Color.White });
@@ -43,6 +44,7 @@ namespace UndertaleEngine.Game1
             _hpBackColor = backcolor;
             Animation = animation;
             currentHP = _realHP;
+            this.outline = outline;
         }
         public void LoadContent(ContentManager content)
         {
@@ -88,7 +90,8 @@ namespace UndertaleEngine.Game1
         {
             
             int frontWidth = (int)(_width * (_realHP / _maxHP));
-            spriteBatch.Draw(_pixel, new Rectangle((int)_position.X - 1, (int)_position.Y - 1, _width + 2, _height + 2), Color.Black * alpha);
+            if(outline)
+                spriteBatch.Draw(_pixel, new Rectangle((int)_position.X - 1, (int)_position.Y - 1, _width + 2, _height + 2), Color.Black * alpha);
             spriteBatch.Draw(_pixel, new Rectangle((int)_position.X, (int)_position.Y, _width, _height), _hpBackColor * alpha);
             spriteBatch.Draw(_pixel, new Rectangle((int)_position.X, (int)_position.Y, frontWidth, _height), _hpFrontColor * alpha);
             

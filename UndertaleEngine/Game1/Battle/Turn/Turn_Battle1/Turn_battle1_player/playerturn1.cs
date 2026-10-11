@@ -32,7 +32,7 @@ namespace UndertaleEngine.Game1
                 this.battle = battle;
                 Menu.IsMenu = true;
                 Menu.IsInMenu = true;
-                battle.Boards["1"].StartResize(new BoardRect(288, 70, 288, 70), 0.25f, BattleBoard.Ease.Linear);
+                battle.Boards["1"].StartResize(new BoardRect(288, 70, 288, 70), 0.3f, BattleBoard.Ease.Linear);
             }
             public void Update(GameTime gameTime)
             {

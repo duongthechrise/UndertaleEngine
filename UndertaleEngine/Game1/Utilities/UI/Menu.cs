@@ -14,9 +14,12 @@ namespace UndertaleEngine
         // ===================================
 
         //              Act
+        public static int ActEnemyColumn = 1;
+        public static int ActEnemySlots = 1;
         public static int ActOptsRow = 1;
         public static int ActOptsColumn = 1;
         public static int ActSlots = 3;
+        public static int PlayerActSlot = 1;
         // ====================================
 
         public static int slot = 1;
@@ -29,8 +32,8 @@ namespace UndertaleEngine
         public static String Enemy3Name = "Enemy3";
         public static int Enemy1HP = 10000;
         public static double Damage;
-        public static int EnemyDef = 20;
-        public static int PlayerATK = 30;
+        public static int EnemyDef = 5;
+        public static int PlayerATK = 14;
         // ======================================
 
         //       fight Animation config
@@ -45,9 +48,16 @@ namespace UndertaleEngine
         public static bool Hit = false;
         public static bool DealingDamage = false;
         //========================================
+
+        //===============act config===============
+        public static bool actingonEnemy1 = false;
+        public static bool confirmAction = false;
+        public static bool confirmActionevoke = false;
         public static void Update()
         {
 
         }
+
     }
+
 }

@@ -55,7 +55,7 @@ namespace UndertaleEngine.Game1
                     }
                     break;
             }
-            if (timer >= 3f)
+            if (timer >= 2f)
             {
                 IsFinished = true;
                 return;

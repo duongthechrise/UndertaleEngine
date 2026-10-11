@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using UndertaleEngine.Game1;
 
 namespace UndertaleEngine
 {
@@ -11,22 +12,43 @@ namespace UndertaleEngine
     {
         SoundEffect Confirm;
         KeyboardState prevkey;
+        Option_Act optionact;
         public void Load(ContentManager content)
         {
             Confirm = content.Load<SoundEffect>("Sounds/snd_menu_confirm");
+            optionact = new Option_Act();
+            optionact.Load(content);
+            optionact.AddOption("Talk");
+            optionact.AddOption("Flirt");
+            optionact.AddOption("Joke");
         }
         public void Update(GameTime gametime)
         {
             var k = Keyboard.GetState();
+            
             if (Menu.IsMenu == true)
             {
                 if (Menu.slot == 2)
                 {
                     if (k.IsKeyDown(Keys.Z) && !prevkey.IsKeyDown(Keys.Z))
                     {
-                        Menu.selectingActopts = true;
-                        Menu.IsInMenu = false;
-                        Confirm.Play(0.65f, 0, 0);
+                        if (!Menu.selectingActopts && !Menu.actingonEnemy1)
+                        {
+                            Menu.selectingActopts = true;
+                            Menu.IsInMenu = false;
+                            Confirm.Play(0.65f, 0, 0);
+                        }
+                        else if(Menu.selectingActopts && !Menu.actingonEnemy1)
+                        {
+                            Confirm.Play(0.65f, 0, 0);
+                            Menu.actingonEnemy1 = true;
+                        }
+                        else if(Menu.selectingActopts && Menu.actingonEnemy1 && !Menu.confirmAction)
+                        {
+                            Confirm.Play(0.65f, 0, 0);
+                            Menu.confirmAction = true;
+                            Menu.confirmActionevoke = true;
+                        }
                     }
                 }
             }
@@ -36,10 +58,17 @@ namespace UndertaleEngine
                 {
                     if (k.IsKeyDown(Keys.X) && !prevkey.IsKeyDown(Keys.X))
                     {
-                        Menu.selectingActopts = false;
-                        Menu.IsInMenu = true;
-                        Menu.ActOptsColumn = 1;
-                        Menu.ActOptsRow = 1;
+                        if (Menu.selectingActopts && !Menu.actingonEnemy1)
+                        {
+                            Menu.selectingActopts = false;
+                            Menu.IsInMenu = true;
+                            Menu.ActOptsColumn = 1;
+                            Menu.ActOptsRow = 1;
+                        }
+                        else if(Menu.selectingActopts && Menu.actingonEnemy1)
+                        {
+                            Menu.actingonEnemy1 = false;
+                        }
                     }
                 }
             }
@@ -52,10 +81,11 @@ namespace UndertaleEngine
                 Menu.ActOptsRow = 2;
             if (Menu.ActOptsColumn > 2)
                 Menu.ActOptsColumn = 2;
+            optionact.Update(gametime);
         }
         public void Draw(SpriteBatch spritebatch)
         {
-
+            optionact.Draw(spritebatch);
         }
     }
 }

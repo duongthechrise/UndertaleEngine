@@ -1,4 +1,4 @@
-﻿//Vector2
+﻿//Vector2 Shake
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -32,6 +32,7 @@ namespace UndertaleEngine.Game1
         KeyboardState _prevKeyboard;
         private SpriteFont _MarsFont;
         SpriteFont determonofont;
+        TypeText dialogue;
         public void SetManager(SceneManager manager)
         {
             _manager = manager;
@@ -72,6 +73,9 @@ namespace UndertaleEngine.Game1
             B = new OBB(new Vector2(_bullet._position.X, _bullet._position.Y), new Vector2(_bullet._texture.Width, _bullet._texture.Height), 0f);
             dialog = new DialogText(determonofont, "  There's someone here.", new Vector2(62, 270), Color.White, 2.0f, 20, true);
             star = new DisplayText(determonofont, "*", new Vector2(60, 270), Color.White, 2, true);
+            dialogue = new TypeText(determonofont, new Vector2(94, 270));
+            dialogue.Show("There's someone here.\nWell~speed10~...~wait0.5~~speed20~~ccrimson~~shake~actually no one.");
+            dialogue.Shake = true;
             battlesystem = new BattleSystem(this);
             battlesystem.EnqueueTotalTurn1();
             battlesystem.EnqueueTotalTurn2();
@@ -85,16 +89,13 @@ namespace UndertaleEngine.Game1
             {
                 if (!_redheart.IsInvincible)
                 {
-                    _hpbar.Damage(10f);
                     _redheart.TakeDamage();
                     _manager.PixelShake(2, 0.18f);
                 }
             }
-            if (k.IsKeyDown(Keys.H))
-            {
-                _hpbar.Heal(2f);
-            }
-
+            if(ks.IsKeyDown(Keys.Space) && !_prevKeyboard.IsKeyDown(Keys.Space))
+                dialogue.Show("There's someone here.\nWell~speed10~...~wait0.5~~speed20~~ccrimson~~shake~actually no one.");
+            _prevKeyboard = ks;
             float _movingspeed = 150f;
             float _speed;
             _speed = _movingspeed;
@@ -134,7 +135,7 @@ namespace UndertaleEngine.Game1
             A.CurrentCollisions.Clear();
             //
             dialog.Update(gameTime);
-
+            dialogue.Update(gameTime);
             foreach (var cover in CoverBoards.Values)
             {
                 cover.Update(gameTime);
@@ -287,6 +288,7 @@ namespace UndertaleEngine.Game1
 
             _redheart.Draw(spriteBatch);
             uisystem._buttonfight.fight.Draw(spriteBatch);
+            uisystem._buttonact.act.Draw(spriteBatch);
             uisystem._buttonfight.fight.Anim.DrawOut(spriteBatch);
             //DebugDraw.DrawOBB(spriteBatch, A, Color.White);
             //DebugDraw.DrawOBB(spriteBatch, B, Color.White);
@@ -300,13 +302,13 @@ namespace UndertaleEngine.Game1
             uisystem._buttonfight.fight.Anim.DrawIn(spriteBatch);
             if (Menu.IsInMenu)
             {
-                dialog.Draw(spriteBatch);
-                star.Draw(spriteBatch);
+                dialogue.Draw(spriteBatch);
+                //star.Draw(spriteBatch);
             }
         }
         void DrawBackGround(SpriteBatch spriteBatch, GraphicsDevice graphics)
         {
-            spriteBatch.Draw(_pixel, new Rectangle(0, 0, 640, 480), Color.Black);
+            spriteBatch.Draw(_pixel, new Rectangle(0, 0, 640, 480), Color.CornflowerBlue);
             uisystem.Draw(spriteBatch);
         }
         public void Unload()

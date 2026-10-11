@@ -50,11 +50,14 @@ namespace UndertaleEngine.Game1
         SoundEffect damage;
         float DamageSoundT = 0f;
         HP_Bar hpbar;
+        Texture2D enemy;
+        PixelShake enemyshake;
+        
         public Anim_Fight(Vector2 BGPosition, Vector2 AimPosition)
         {
             this.BGPosition = BGPosition;
             this.AimPosition = AimPosition;
-            knifeposition = new Vector2(300, 70);
+            knifeposition = new Vector2(320, 120);
             missposition = new Vector2(320, 60);
             DamagePosition = new Vector2(305, 160);
         }
@@ -80,8 +83,11 @@ namespace UndertaleEngine.Game1
             DamageFont[8] = new SpriteAnimation(DamageNumber, 10, 7, 7, 0f, loop: false);
             DamageFont[9] = new SpriteAnimation(DamageNumber, 10, 8, 8, 0f, loop: false);
             DamageFont[0] = new SpriteAnimation(DamageNumber, 10, 9, 9, 0f, loop: false);
-            hpbar = new HP_Bar(graphics, new Vector2(224, 50), 191, 13, 1050, Color.Lime, CustomColor.DarkGray, animation: true);
+            hpbar = new HP_Bar(graphics, new Vector2(240, 30), 163, 13, 1050, Color.Lime, CustomColor.DarkGray, animation: true, outline: true);
             hpbar.LoadContent(content);
+            enemy = content.Load<Texture2D>("Sprites/Enemy/enemy");
+            enemyshake = new PixelShake();
+
         }
         public void Update(GameTime gametime)
         {
@@ -108,8 +114,8 @@ namespace UndertaleEngine.Game1
                     if (Menu.attacking == false && Menu.slice == false)
                         TotalBGAnimationT += dt2 / 1.5f;
                     if (Menu.attacking && Menu.slice)
-                        percentage = 2 * (0.5f - Math.Abs(TotalBGAnimationT - 0.5f));
-                    Menu.Damage = Math.Round(percentage * (Math.Pow(Menu.PlayerATK, 2) / (Menu.PlayerATK + Menu.EnemyDef)), MidpointRounding.AwayFromZero);
+                        percentage = MathF.Pow((2 * (0.5f - Math.Abs(TotalBGAnimationT - 0.5f))), 1.5f);
+                    Menu.Damage = Math.Round(percentage * (30 - Menu.EnemyDef / Menu.PlayerATK)) + Math.Round(percentage * (Math.Pow(Menu.PlayerATK, 3) / (Menu.PlayerATK + Math.Pow(Menu.EnemyDef, 3))), MidpointRounding.AwayFromZero);
 
                     //attacking, begin animation
                     if (Menu.attacking)
@@ -243,15 +249,16 @@ namespace UndertaleEngine.Game1
             {
                 damage.Play(0.65f, 0, 0);
                 hpbar.Damage((float)Menu.Damage);
+                enemyshake.Shake(1, 0.25f);
                 Menu.DealingDamage = false;
             }
             hpbar.Update(gametime);
             if (k.IsKeyDown(Keys.Space) && !prevkey.IsKeyDown(Keys.Space))
-                hpbar.Damage(500);
+                //hpbar.Damage(500);
+                enemyshake.Shake(1, 0.25f);
             if (k.IsKeyDown(Keys.B))
                 hpbar.Heal(1000);
-            Debug.WriteLine($"realHP: {hpbar._realHP}, maxHP {hpbar.MaxHP}, t: {hpbar.t}");
-
+            enemyshake.Update(gametime);
             prevkey = k;
         }
         public void Draw(SpriteBatch spritebatch)
@@ -268,8 +275,9 @@ namespace UndertaleEngine.Game1
         }
         public void DrawOut(SpriteBatch spritebatch)
         {
+            spritebatch.Draw(enemy, new Vector2(320, 170) + enemyshake.Offset, null, Color.White, 0f, new Vector2(enemy.Width / 2, enemy.Height / 2), 2f, SpriteEffects.None, 0f);
             if (Menu.slice)
-                spritebatch.Draw(knifeslice.Texture, knifeposition, knifeslice.GetSourceRect(), Color.White);
+                spritebatch.Draw(knifeslice.Texture, knifeposition, knifeslice.GetSourceRect(), Color.White, 0f, new Vector2(knifeslice.Texture.Width / 12, knifeslice.Texture.Height / 12), 1f, SpriteEffects.None, 0f);
             if (IndicatorAnimationT_Stage1 > 0f && Menu.Miss)
             {
                 spritebatch.Draw(miss, missposition, null, Color.White * IndicatorAlpha, 0f, new Vector2(miss.Width / 2, miss.Height / 2), 1f, SpriteEffects.None, 0f);
