@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -14,6 +15,7 @@ namespace UndertaleEngine.Game1
         private RenderTarget2D _renderTarget;
         private SceneManager _scenemanager;
         KeyboardState _prevKeyboard;
+        ContentManager content;
 
 
         private readonly int _virtualWidth = 640;
@@ -56,6 +58,7 @@ namespace UndertaleEngine.Game1
 
         protected override void LoadContent()
         {
+            Fonts.Load(Content);
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _renderTarget = new RenderTarget2D(
                 GraphicsDevice,

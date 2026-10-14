@@ -15,7 +15,7 @@ namespace UndertaleEngine.Game1
         DisplayText[] star = new DisplayText[4];
         Vector2[] slot = new Vector2[4];
         DisplayText[] enemy = new DisplayText[3];
-        Dialogs dialogs;
+        public Dialogs dialogs;
         public Option_Act()
         {
             Option.Add("Check");

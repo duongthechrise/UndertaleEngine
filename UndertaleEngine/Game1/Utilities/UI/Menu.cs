@@ -1,5 +1,4 @@
-﻿using SharpDX.MediaFoundation.DirectX;
-using System;
+﻿using System;
 
 namespace UndertaleEngine
 {
@@ -20,6 +19,7 @@ namespace UndertaleEngine
         public static int ActOptsColumn = 1;
         public static int ActSlots = 3;
         public static int PlayerActSlot = 1;
+        public static int next = 0;
         // ====================================
 
         public static int slot = 1;

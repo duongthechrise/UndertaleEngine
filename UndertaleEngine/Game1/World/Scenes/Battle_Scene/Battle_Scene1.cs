@@ -19,7 +19,6 @@ namespace UndertaleEngine.Game1
         public HP_Bar _hpbar;
         private DisplayText _timer;
         private DisplayText _timer2;
-        DisplayText star;
         private Texture2D _pixel;
         public BattleBoardSystem _boardsystem;
         public Effect maskEffect;
@@ -28,11 +27,10 @@ namespace UndertaleEngine.Game1
         public Dictionary<string, BattleBoard> Boards = new();
         public Dictionary<string, BattleBoard> CoverBoards = new();
         public BattleSystem battlesystem;
-        DialogText dialog;
         KeyboardState _prevKeyboard;
         private SpriteFont _MarsFont;
         SpriteFont determonofont;
-        TypeText dialogue;
+        public TypeText dialogue;
         public void SetManager(SceneManager manager)
         {
             _manager = manager;
@@ -71,14 +69,13 @@ namespace UndertaleEngine.Game1
             _bullet = new Bullet_test();
             _bullet.LoadContent(content, graphicsDevice);
             B = new OBB(new Vector2(_bullet._position.X, _bullet._position.Y), new Vector2(_bullet._texture.Width, _bullet._texture.Height), 0f);
-            dialog = new DialogText(determonofont, "  There's someone here.", new Vector2(62, 270), Color.White, 2.0f, 20, true);
-            star = new DisplayText(determonofont, "*", new Vector2(60, 270), Color.White, 2, true);
-            dialogue = new TypeText(determonofont, new Vector2(94, 270));
-            dialogue.Show("There's someone here.\nWell~speed10~...~wait0.5~~speed20~~ccrimson~~shake~actually no one.");
-            dialogue.Shake = true;
+            dialogue = new TypeText(Fonts.Determono, new Vector2(62, 270));
             battlesystem = new BattleSystem(this);
             battlesystem.EnqueueTotalTurn1();
             battlesystem.EnqueueTotalTurn2();
+            battlesystem.EnqueueTotalTurn3();
+            battlesystem.EnqueueTotalTurn4();
+            battlesystem.EnqueueTotalTurn5();
         }
         public void Update(GameTime gameTime)
         {
@@ -134,7 +131,6 @@ namespace UndertaleEngine.Game1
             A.PreviousCollisions = new HashSet<OBB>(A.CurrentCollisions);
             A.CurrentCollisions.Clear();
             //
-            dialog.Update(gameTime);
             dialogue.Update(gameTime);
             foreach (var cover in CoverBoards.Values)
             {
@@ -303,7 +299,6 @@ namespace UndertaleEngine.Game1
             if (Menu.IsInMenu)
             {
                 dialogue.Draw(spriteBatch);
-                //star.Draw(spriteBatch);
             }
         }
         void DrawBackGround(SpriteBatch spriteBatch, GraphicsDevice graphics)

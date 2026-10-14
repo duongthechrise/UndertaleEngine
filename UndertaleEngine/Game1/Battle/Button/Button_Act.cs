@@ -35,7 +35,7 @@ namespace UndertaleEngine.Game1
             CurrentAnimation.Play();
             CurrentAnimation.Update(gameTime);
             act.Update(gameTime);
-            if (Menu.slot == 2 && Menu.IsMenu && !Menu.confirmAction)
+            if (Menu.slot == 2 && Menu.IsMenu && !Menu.confirmAction && !Menu.turnfinish)
             {
                 CurrentAnimation = IsHover;
             }

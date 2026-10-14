@@ -50,6 +50,21 @@ namespace UndertaleEngine.Game1
             turnQueue.Enqueue(new PlayerTurn2());
             turnQueue.Enqueue(new Enemyturn2());
         }
+        public void EnqueueTotalTurn3()
+        {
+            turnQueue.Enqueue(new PlayerTurn3());
+            turnQueue.Enqueue(new Enemyturn3());
+        }
+        public void EnqueueTotalTurn4()
+        {
+            turnQueue.Enqueue(new PlayerTurn4());
+            turnQueue.Enqueue(new Enemyturn4());
+        }
+        public void EnqueueTotalTurn5()
+        {
+            turnQueue.Enqueue(new PlayerTurn4());
+            turnQueue.Enqueue(new Enemyturn4());
+        }
     }
 }
 

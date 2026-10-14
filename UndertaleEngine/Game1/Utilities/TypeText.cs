@@ -1,8 +1,8 @@
 ﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SharpDX.Direct2D1.Effects;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 namespace UndertaleEngine.Game1
 {
@@ -89,11 +89,7 @@ namespace UndertaleEngine.Game1
 
                         if (cmd.StartsWith("speed"))
                         {
-                            if (float.TryParse(
-                                cmd.Substring(5),
-                                System.Globalization.NumberStyles.Float,
-                                System.Globalization.CultureInfo.InvariantCulture,
-                                out float newSpeed))
+                            if (float.TryParse(cmd.Substring(5),NumberStyles.Float, CultureInfo.InvariantCulture, out float newSpeed))
                             {
                                 currentSpeed = Math.Max(1f, newSpeed);
                             }
@@ -103,11 +99,7 @@ namespace UndertaleEngine.Game1
                         }
                         if (cmd.StartsWith("wait"))
                         {
-                            if (float.TryParse(
-                                cmd.Substring(4),
-                                System.Globalization.NumberStyles.Float,
-                                System.Globalization.CultureInfo.InvariantCulture,
-                                out float waitTime))
+                            if (float.TryParse(cmd.Substring(4), NumberStyles.Float, CultureInfo.InvariantCulture, out float waitTime))
                             {
                                 chars.Add('\0');
                                 colors.Add(currentColor);
@@ -145,7 +137,12 @@ namespace UndertaleEngine.Game1
             }
         }
 
-
+        public void skip()
+        {
+            shown = chars.Count;
+            waitTimer = 0f;
+            timer = 0f;
+        }
         public void Update(GameTime gameTime)
         {
             shakeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -164,7 +161,6 @@ namespace UndertaleEngine.Game1
 
             while (!Finished)
             {
-                // Lệnh wait
                 if (chars[shown] == '\0')
                 {
                     waitTimer = waits[shown];
@@ -220,10 +216,6 @@ namespace UndertaleEngine.Game1
                 spritebatch.DrawString(font, c.ToString(), drawPos + offset, colors[i], 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
 
                 drawPos.X += font.MeasureString(c.ToString()).X * Scale;
-            }
-            for(int a = 0; a <= line; a++)
-            {
-                spritebatch.DrawString(font, "*", new Vector2(position.X - 34, position.Y + 32 * a), Color.White, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
             }
         }
     }

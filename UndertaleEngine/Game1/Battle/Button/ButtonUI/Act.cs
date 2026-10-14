@@ -32,7 +32,7 @@ namespace UndertaleEngine
                 {
                     if (k.IsKeyDown(Keys.Z) && !prevkey.IsKeyDown(Keys.Z))
                     {
-                        if (!Menu.selectingActopts && !Menu.actingonEnemy1)
+                        if (!Menu.selectingActopts && !Menu.actingonEnemy1 && !Menu.turnfinish)
                         {
                             Menu.selectingActopts = true;
                             Menu.IsInMenu = false;
@@ -48,6 +48,14 @@ namespace UndertaleEngine
                             Confirm.Play(0.65f, 0, 0);
                             Menu.confirmAction = true;
                             Menu.confirmActionevoke = true;
+                        }
+                        else if(Menu.confirmAction)
+                        {
+                            if(optionact.dialogs.dialogtext.Finished)
+                            {
+                                Menu.next += 1;
+                                Menu.confirmActionevoke = true;
+                            }
                         }
                     }
                 }
@@ -65,9 +73,13 @@ namespace UndertaleEngine
                             Menu.ActOptsColumn = 1;
                             Menu.ActOptsRow = 1;
                         }
-                        else if(Menu.selectingActopts && Menu.actingonEnemy1)
+                        else if (Menu.selectingActopts && Menu.actingonEnemy1 && !Menu.confirmAction)
                         {
                             Menu.actingonEnemy1 = false;
+                        }
+                        else if (Menu.confirmAction && Menu.selectingActopts && Menu.actingonEnemy1)
+                        {
+                            optionact.dialogs.dialogtext.skip();
                         }
                     }
                 }
