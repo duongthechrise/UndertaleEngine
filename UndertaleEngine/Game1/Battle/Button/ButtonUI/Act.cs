@@ -30,7 +30,8 @@ namespace UndertaleEngine
             {
                 if (Menu.slot == 2)
                 {
-                    if (k.IsKeyDown(Keys.Z) && !prevkey.IsKeyDown(Keys.Z))
+                    if (k.IsKeyDown(Keys.Z) && !prevkey.IsKeyDown(Keys.Z) ||
+                        k.IsKeyDown(Keys.Enter) && !prevkey.IsKeyDown(Keys.Enter))
                     {
                         if (!Menu.selectingActopts && !Menu.actingonEnemy1 && !Menu.turnfinish)
                         {
@@ -64,7 +65,9 @@ namespace UndertaleEngine
             {
                 if (Menu.slot == 2)
                 {
-                    if (k.IsKeyDown(Keys.X) && !prevkey.IsKeyDown(Keys.X))
+                    if (k.IsKeyDown(Keys.X) && !prevkey.IsKeyDown(Keys.X) ||
+                        k.IsKeyDown(Keys.LeftShift) && !prevkey.IsKeyDown(Keys.LeftShift) ||
+                        k.IsKeyDown(Keys.RightShift) && !prevkey.IsKeyDown(Keys.RightShift))
                     {
                         if (Menu.selectingActopts && !Menu.actingonEnemy1)
                         {

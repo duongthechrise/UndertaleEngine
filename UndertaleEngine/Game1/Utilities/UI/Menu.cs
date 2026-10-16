@@ -22,6 +22,12 @@ namespace UndertaleEngine
         public static int next = 0;
         // ====================================
 
+        //              Mercy
+        public static int OptionColumn = 1;
+        public static int SpareColumn = 1;
+        public static bool Spareable = false;
+        public static bool fleeable = false;
+        // ====================================
         public static int slot = 1;
         public static int page = 1;
         public static bool selectingFightopts = false;
@@ -53,6 +59,9 @@ namespace UndertaleEngine
         public static bool actingonEnemy1 = false;
         public static bool confirmAction = false;
         public static bool confirmActionevoke = false;
+        // ==============mercy config=============
+        public static bool choosingMercyOption = false;
+        public static bool mercyingonEnemy1 = false;
         public static void Update()
         {
 

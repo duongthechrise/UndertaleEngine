@@ -29,7 +29,6 @@ namespace UndertaleEngine.Game1
         public bool startaiming = false;
 
         //dealing
-        KeyboardState prevkey;
         Vector2 BGscale = new Vector2(1f, 1f);
         float IndicatorAlpha = 0f;
         SpriteAnimation aiming;
@@ -155,6 +154,7 @@ namespace UndertaleEngine.Game1
                     {
                         IndicatorAnimationT_Stage1 += dt2 / 0.25f;
                         IndicatorAlphaT_Stage1 += dt2 / 0.25f;
+                        
                         float Ease = IndicatorAnimationT_Stage1 * (2f - IndicatorAnimationT_Stage1);
                         if (IndicatorAnimationT_Stage1 <= 1f)
                         {
@@ -253,13 +253,7 @@ namespace UndertaleEngine.Game1
                 Menu.DealingDamage = false;
             }
             hpbar.Update(gametime);
-            if (k.IsKeyDown(Keys.Space) && !prevkey.IsKeyDown(Keys.Space))
-                //hpbar.Damage(500);
-                enemyshake.Shake(1, 0.25f);
-            if (k.IsKeyDown(Keys.B))
-                hpbar.Heal(1000);
             enemyshake.Update(gametime);
-            prevkey = k;
         }
         public void Draw(SpriteBatch spritebatch)
         {
